@@ -66,6 +66,6 @@ COPY scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Set working directory
-WORKDIR /home/user
+WORKDIR /home/user/ros2_ws
 
 CMD ["/bin/bash"]

@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  ros2_dev_container:
+    image: {image}:{tag}                  # 사용할 이미지 이름:태그
+    container_name: {container_name}      # 컨테이너 이름
+    hostname: ros2_host                   # 호스트네임 설정
+    network_mode: host                    # --network host
+    privileged: true                      # --privileged
+    tty: true                             # -it (터미널 활성화)
+    stdin_open: true                      # -it (표준 입력 열기)
+    
+    # --gpus all 및 NVIDIA 드라이버 설정
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+    # -e 또는 --env 설정들
+    environment:
+      - DISPLAY=$DISPLAY
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - LOCAL_USER_ID=${LOCAL_USER_ID:-1000} # 호스트 유저 UID 전달
+
+    # -v (볼륨 매핑) 설정들
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /dev:/dev:rw
+      - /home/${USER}/Docker/{workspace_name}:/home/user/ros2_ws
+      # - ros2_build:/home/user/ros2_ws/build
+      # - ros2_install:/home/user/ros2_ws/install
+      # - ros2_log:/home/user/ros2_ws/log
+      # - ./ros2_ws:/home/user/ros2_ws
